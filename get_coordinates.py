@@ -41,9 +41,9 @@ def get_coordinates(path_cap, time_find_sample):
     cv2.imshow('frame_d', frame_d)
     # Указываем мышкой углы образца по часовой стрелке, начиная с правого верхнего угла
     # Получаем координаты углов образца с каплями в 'coord_d.txt'
-    if path.isfile('coord_d.txt'):
-        remove('coord_d.txt')
-    cv2.setMouseCallback('frame_d', click_event, ['coord_d.txt', frame_d, 'coordinates on frame of drops'])
+    if path.isfile(f'{path_cord}coord_d.txt'):
+        remove(f'{path_cord}coord_d.txt')
+    cv2.setMouseCallback('frame_d', click_event, [f'{path_cord}coord_d.txt', frame_d, 'coordinates on frame of drops'])
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -52,15 +52,16 @@ def get_coordinates(path_cap, time_find_sample):
     cv2.imshow('frame_p', frame_p)
     # Указываем мышкой углы образца по часовой стрелке, начиная с правого верхнего угла
     # Получаем координаты углов образца с искрами в 'coord_p.txt'
-    if path.isfile('coord_p.txt'):
-        remove('coord_p.txt')
-    cv2.setMouseCallback('frame_p', click_event, ['coord_p.txt', frame_p, 'coordinates on frame of discharges'])
+    if path.isfile(f'{path_cord}coord_p.txt'):
+        remove(f'{path_cord}coord_p.txt')
+    cv2.setMouseCallback('frame_p', click_event, [f'{path_cord}coord_p.txt', frame_p, 'coordinates on frame of discharges'])
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
-    get_coordinates(path_cap='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm/2021-10-22 16-12-08.mp4',
-                    time_find_sample=64)
+    path_cord = '/silicone SPBU/PKD_18.02.22_part/10/'
+    get_coordinates(path_cap='/silicone SPBU/PKD_18.02.22_part/10/2022-02-18 15-28-35.mp4',
+                    time_find_sample=0)
 
 

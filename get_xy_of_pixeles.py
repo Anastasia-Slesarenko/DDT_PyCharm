@@ -20,18 +20,21 @@ def count_bright_pixels(frame, crit_pix=20):
 
 
 def find_false_pixels(frames_0='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm/'
-                               'test_frames/cap_cut_crop.mp4/0000000000.jpg'):
+                               'silicone SPBU/PKD_18.02.22_part/10/test_frames/cap_cut_crop.mp4/0000000000.jpg'):
     frame_with_name = Image.open(f'{frames_0}')
+    width, height = frame_with_name.size
+    loc_x_start = width / 4
+    loc_x_end = 3 * width / 4
     frame_gray = ImageOps.grayscale(frame_with_name)
     # Убираем шум через медианный фильтр
     frame_gray_from_filter = frame_gray.filter(ImageFilter.MedianFilter(3))
     frame_gray_np = np.array(frame_gray_from_filter)
     false_idx = np.stack(np.where(frame_gray_np >= 10), axis=1)
 
-    return false_idx
+    return false_idx, loc_x_start, loc_x_end
 
 
-def row_diff(loc_idx_old, false_idx):
+def row_diff(loc_idx_old, false_idx, loc_x_start, loc_x_end):
     nrows, ncols = loc_idx_old.shape
     dtype = {'names': ['f{}'.format(i) for i in range(ncols)],
              'formats': ncols * [loc_idx_old.dtype]}
@@ -39,11 +42,16 @@ def row_diff(loc_idx_old, false_idx):
 
     # Координаты пискелей искр без битых
     loc_idx = np.delete(loc_idx_old, delete_a_rows, axis=0)
+    to_del = []
+    for k in range(loc_idx.shape[0]):
+        if (loc_idx[k][1] < int(loc_x_start)) | (loc_idx[k][1] > int(loc_x_end)):
+            to_del += [k]
+    loc_idx = np.delete(loc_idx, to_del, axis=0)
 
     return loc_idx
 
 
-def async_load_find(frame, path_frames, false_idx, num_brightpixels=10):
+def async_load_find(frame, path_frames, false_idx, loc_x_start, loc_x_end, num_brightpixels=10):
     frame_with_name = Image.open(f'{path_frames}{frame}')
     frame_gray = ImageOps.grayscale(frame_with_name)
     # Убираем шум через медианный фильтр
@@ -54,30 +62,29 @@ def async_load_find(frame, path_frames, false_idx, num_brightpixels=10):
         alpha = []
         loc_idx = np.stack(np.where(frame_gray_np > 20), axis=1)
 
-        # Убираем битые пиксели на изображении
-        loc_idx = row_diff(loc_idx, false_idx)
+        # Убираем битые пиксели на изображении и ограничиваем по оси х
+        loc_idx = row_diff(loc_idx, false_idx, loc_x_start, loc_x_end)
+        if loc_idx.shape[0] != 0:
 
-        # Записываем яркость искр
-        for i in range(loc_idx.shape[0]):
-            alpha += [frame_gray_np[loc_idx[i][0], loc_idx[i][1]]]
-        # Соединяем координаты искр и их яркость на кадре в один массив
-        # Сохраняем в txt файле с именем кадра
-        all_ = np.append(loc_idx, np.array(alpha).reshape((len(alpha), 1)), axis=1)
-        # x - all[:, 1]
-        # y - all[:, 0]
-        # alpha - all[:, 2]
-        np.savetxt(fname=f'{path_frames}{int(frame[:-4])}.txt', X=all_, fmt='%d')
+            # Записываем яркость искр
+            for i in range(loc_idx.shape[0]):
+                alpha += [frame_gray_np[loc_idx[i][0], loc_idx[i][1]]]
+            # Соединяем координаты искр и их яркость на кадре в один массив
+            # Сохраняем в txt файле с именем кадра
+            all_ = np.append(loc_idx, np.array(alpha).reshape((len(alpha), 1)), axis=1)
+            # x - all[:, 1]
+            # y - all[:, 0]
+            # alpha - all[:, 2]
+            np.savetxt(fname=f'{path_frames}{int(frame[:-4])}.txt', X=all_, fmt='%d')
 
     return 1
 
 
-def get_frames_with_discharges(path_frames='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm/test_frames'
-                                           '/cap_cut_crop.mp4/', num_brightpixels=10):
+def get_frames_with_discharges(path_frames, path_frames_0, num_brightpixels=10):
     os.chdir(path_frames)
     result = glob.glob('*.jpg')
 
-    false_idx = find_false_pixels(frames_0='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm'
-                                           '/test_frames/cap_cut_crop.mp4/0000000000.jpg')
+    false_idx, loc_x_start, loc_x_end = find_false_pixels(frames_0=path_frames_0)
 
     n_jobs = 20  # кол-во процессов
     pbar = tqdm(total=len(result))
@@ -89,6 +96,8 @@ def get_frames_with_discharges(path_frames='C:/Users/1/Desktop/ВКР/Магис
     need_func = partial(async_load_find,
                         path_frames=path_frames,
                         false_idx=false_idx,
+                        loc_x_start=loc_x_start,
+                        loc_x_end=loc_x_end,
                         num_brightpixels=num_brightpixels)
 
     for name_frame in sorted(result):
@@ -101,5 +110,9 @@ def get_frames_with_discharges(path_frames='C:/Users/1/Desktop/ВКР/Магис
 
 if __name__ == '__main__':
     get_frames_with_discharges(
-        path_frames='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm/test_frames/cap_cut_crop.mp4/',
-        num_brightpixels=10)
+        path_frames='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm'
+                    '/silicone SPBU/PKD_18.02.22_part/10/test_frames/cap_cut_crop.mp4/',
+        path_frames_0='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm'
+                      '/silicone SPBU/PKD_18.02.22_part/10/test_frames/cap_cut_crop.mp4/0000000000.jpg',
+        num_brightpixels=10
+    )
