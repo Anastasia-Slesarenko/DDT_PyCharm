@@ -13,6 +13,10 @@ from dash import Dash, callback_context
 from dash import dcc, html
 from dash.dependencies import Input, Output
 
+from celluloid import Camera
+import matplotlib.pylab as pl
+from IPython.display import Video
+
 
 sum_df = pd.read_csv('C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/2/test_frames_drops'
                      '/cap_cut_crop_drops.mp4/sum_df_fix.cvs', index_col=0)
@@ -50,9 +54,6 @@ app.layout = html.Div([
         dcc.Graph(id='plot_1')
     ], style={'float': 'center', 'width': '100%', 'display': 'inline-block',
               }),
-
-    # html.Div([dcc.Input(id='find_frame', type='text', value=int(t_range.max()))],
-    #           style={"display": "grid", "grid-template-columns": "10% 40% 10%"}),
 
     html.Div([
         html.Label(id='t-frame_name'),
@@ -96,17 +97,6 @@ def contr_plot(t_frame_slider, up, down):
 
     n_frame = t_frame_dash
 
-    # img_width = 229
-    # img_height = 461
-
-    # img_width = 268
-    # img_height = 550
-
-    # img_width = 259
-    # img_height = 516
-
-    # img_width = 248
-    # img_height = 570
     if t_frame_dash in t_r:
 
         plot_df = sum_df[sum_df.t_sum == t_frame_dash]
@@ -179,16 +169,3 @@ def contr_plot(t_frame_slider, up, down):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
-
- # layout = go.Layout(margin=dict(l=20, r=20, t=20, b=20),
- #                       width=img_width, height=img_height)
- #    fig = go.Figure(data=[go.Scatter(x=plot_df['x_sum'],
- #                                     y=plot_df['y_sum'],
- #                                     mode='markers',
- #                                     marker=dict(color='red')
- #                                     )],
- #                    layout=layout)
- #
- #    fig.update_yaxes(autorange="reversed", showgrid=True,
- #                     tickvals=[0, img_height])

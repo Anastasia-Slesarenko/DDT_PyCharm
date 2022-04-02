@@ -7,11 +7,11 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 from PIL import Image
 
-sum_df = pd.read_csv('C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_18.02.22_part/10'
+sum_df = pd.read_csv('C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_02.02.22_part/2'
                      '/test_frames/cap_cut_crop.mp4/sum_df.cvs', index_col=0)
 sum_df = sum_df.sort_values('t_sum')
 
-path_image0_p = 'C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_18.02.22_part/10/test_frames' \
+path_image0_p = 'C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_02.02.22_part/2/test_frames' \
                 '/cap_cut_crop.mp4/0000000000.jpg'
 
 img_p = Image.open(path_image0_p)
@@ -52,7 +52,7 @@ app.layout = html.Div([
             max=int(sum_df['t_sum'].max()),
             step=None,
             marks={int(t): {'label': ''} for i, t in enumerate(t_range)},
-            value=62500,
+            value=52026,
             id='frame--slider',
             updatemode='mouseup'
         )], style={'width': '50%', 'display': 'inline-block', 'padding': '40px 20px 20px 20px'}),
@@ -121,7 +121,7 @@ def contr_plot(t_frame):
 
     fig = go.Figure(
         go.Contour(
-            z=f(x_m, y_m, plot_df).tolist(),
+            z=log10f(x_m, y_m, plot_df).tolist(),
             dx=dx,
             x0=0,
             dy=dy,

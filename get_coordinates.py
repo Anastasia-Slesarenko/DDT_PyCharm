@@ -60,8 +60,8 @@ def get_coordinates(path_cap, time_find_sample):
 
 
 if __name__ == '__main__':
-    path_cord = '/silicone SPBU/PKD_18.02.22_part/10/'
-    get_coordinates(path_cap='/silicone SPBU/PKD_18.02.22_part/10/2022-02-18 15-28-35.mp4',
+    path_cord = 'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_18.02.22_part/CD/'
+    get_coordinates(path_cap=r'C:\Users\1\Desktop\VKR\Master\data\silicone SPBU\PKD_18.02.22_part\CD\2022-02-18 10-13-14.mp4',
                     time_find_sample=0)
 
 

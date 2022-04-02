@@ -1,5 +1,5 @@
 from moviepy.editor import VideoFileClip
-
+from tqdm import tqdm
 
 def get_cut_and_crop_cap(path_cap, path_file_coord, time_start, time_end, name_video):
     """
@@ -35,10 +35,21 @@ def get_cut_and_crop_cap(path_cap, path_file_coord, time_start, time_end, name_v
 
 
 if __name__ == '__main__':
-    path_new = '/silicone SPBU/PKD_18.02.22_part/10/'
-    get_cut_and_crop_cap(path_cap=f'{path_new}2022-02-18 15-58-02.mp4',
-                         path_file_coord=f"{path_new}coord_p.txt", time_start=0, time_end=VideoFileClip(f'{path_new}2022-02-18 15-58-02.mp4').duration,
-                         name_video='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm'
-                                    '/silicone SPBU/PKD_18.02.22_part/10/cap_cut_crop.mp4')
+
+    n = ['2022-02-18 10-13-14','2022-02-18 10-14-46','2022-02-18 10-15-23','2022-02-18 10-16-01','2022-02-18 10-16-31','2022-02-18 10-16-54']
+    path_new = 'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_18.02.22_part/CD/'
+
+    i_k = [1, 2, 3, 4, 5, 6]
+
+    for k, i in tqdm(zip(n, i_k)):
+        get_cut_and_crop_cap(path_cap=f'{path_new}{k}.mp4',
+                             path_file_coord=f"{path_new}coord_p.txt", time_start=0,
+                             time_end=VideoFileClip(f'{path_new}{k}.mp4').duration,
+                             name_video=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_18.02.22_part/CD/cap_cut_{i}.mp4')
+
+    # path_new = 'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_09.02.22_part/CD/'
+    # get_cut_and_crop_cap(path_cap=f'{path_new}2022-02-02 11-55-39.mp4',
+    #                      path_file_coord=f"{path_new}coord_p.txt", time_start=0, time_end=VideoFileClip(f'{path_new}2022-02-02 11-55-39.mp4').duration,
+    #                      name_video=r'C:\Users\1\Desktop\ВКР\Магистерская\data\silicone SPBU\PKD_02.02.22_part\CD\cap_cut_6.mp4')
 
 

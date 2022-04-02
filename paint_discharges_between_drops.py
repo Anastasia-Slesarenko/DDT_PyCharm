@@ -14,9 +14,9 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 
 
-sum_df = pd.read_csv('C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_02.02.22_part/1/test_frames_drops'
+sum_df = pd.read_csv('C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/2/test_frames_drops'
                      '/cap_cut_crop_drops.mp4/sum_df_fix.cvs', index_col=0)
-img = Image.open('C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_02.02.22_part/1/test_frames_drops'
+img = Image.open('C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/2/test_frames_drops'
                  '/cap_cut_crop_drops.mp4/0000000000.jpg')
 w, h = img.size
 
@@ -25,7 +25,7 @@ w, h = img.size
 def au_frame(number):
 
     frame_name = '{0:0>10}.jpg'.format(number)
-    path_frames = 'C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_02.02.22_part/1/' \
+    path_frames = 'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/2/' \
                   'test_frames_drops/cap_cut_crop_drops.mp4/'
     frame_with_name = Image.open(f'{path_frames}{frame_name}')
     # enhancer = ImageEnhance.Brightness(frame_with_name)

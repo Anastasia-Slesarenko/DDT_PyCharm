@@ -18,18 +18,19 @@ def integ(I, t):
 
 if __name__ == '__main__':
 
-    path_file_coord = 'C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/Postresult/'
+    path_file_coord = 'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/Postresult/data_with_criterion/'
     os.chdir(path_file_coord)
     result = glob.glob('*.cvs')
     n_f = []
     W_1 = []
-
+    print(result[0])
     fig, ax = plt.subplots(figsize=(13, 8))
     for n in tqdm(sorted(result)):
         number = int(re.findall(r'\d+', n)[0])
         d = pd.read_csv(n, index_col=0)
-        ax.semilogy(d['t']/60, d['I'], '-', label=f'{number}')
-        n_f += [d['t'].iloc[-1]/60]
+        ax.semilogy(d['t_sum']/60, d['I'], '-', label=f'{number}')
+        #ax.plot(d['t_sum'] / 60, d['I'], '-', label=f'{number}')
+        n_f += [d['t_sum'].iloc[-1]/60]
         W_1 += [d['I'].iloc[-1]]
         # ax.axvline(d['t'].iloc[-1], ls='-.', lw=1,
         #            label=f'$W_{number} ={int(round(W_1))}, N frame = {int(n_f)}$')
@@ -40,29 +41,32 @@ if __name__ == '__main__':
     ax.set_xlabel("Время, мин", fontsize=15)
     ax.set_ylabel("Суммарная яркость на предыдущих кадрах, усл. ед.", fontsize=15)
     ax.tick_params(axis='both', labelsize=15)
+    ax.yaxis.get_offset_text().set_size(15)
     # plt.show()
 
     data = pd.DataFrame()
     data['W'] = W_1
     data['t'] = n_f
-    # sns_plot = sns.histplot(data['t'])
-    # fig2 = sns_plot.get_figure()
-    # plt.show()
+    fig3, ax3 = plt.subplots()
+    ax3.scatter(data['t'] / data['t'].median(), data['W'] / data['W'].median())
 
-    # x_W = Analysis(df=data['W'], show=True, bounds='lrb', bounds_type='2s', cl=0.95, x_label='Brightness', unit='a.u.')
-    # x_t = Analysis(df=data['t'], show=True, bounds='lrb', bounds_type='2s', cl=0.95, unit='min')
+    #data.to_csv(r'C:\Users\1\Desktop\VKR\Master\data\silicone SPBU\Postresult\data_with_criterion\dat_t_W.csv', index=False)
 
-    # Brightness = Analysis(df=data['W']/data['W'].mean(), show=True, bounds='lrb', bounds_type='2s', cl=0.95, x_label='Failure', unit='a.u.')
-    # Brightness.mle()
-    # Time = Analysis(df=data['t']/data['t'].mean(), show=True, bounds='lrb', bounds_type='2s', cl=0.95, x_label='Failure',  unit='a.u.')
-    # Time.mle()
-    # objects = {fr'Brightness: $\widehat\beta$={Brightness.beta:4f} | $\widehat\eta$={Brightness.eta:4f}': Brightness,
-    #            fr'Time: $\widehat\beta$={Time.beta:4f} | $\widehat\eta$={Time.eta:4f}': Time}
-    # PlotAll(objects).mult_weibull()
+    ax3.grid()
+    ax3.set_xlabel("Время")
+    ax3.set_ylabel("Суммарная яркость к концу теста")
+    ax3.tick_params(axis='both')
+    plt.show()
+
+    fig5, ax5 = plt.subplots()
+    ax5.scatter([20.3, 21.2, 21.7, 22.5, 22.2], data['W'][1:])
+    ax5.grid()
+    ax5.set_xlabel("Температура, С", fontsize=15)
+    ax5.set_ylabel("Суммарная яркость к концу теста, усл. ед.", fontsize=15)
+    ax5.tick_params(axis='both', labelsize=15)
+    plt.show()
 
     fig2, ax2 = plt.subplots()
-
-    # df_std.melt(var_name='Column', value_name='Normalized')
     plot_bb = pd.DataFrame()
     plot_bb['data'] = (data['t'] / data['t'].mean()).tolist() + (data['W'] / data['W'].mean()).tolist()
     plot_bb['variable'] = ['time']*data['t'].shape[0] + ['brightness']*data['W'].shape[0]
@@ -70,12 +74,29 @@ if __name__ == '__main__':
     # plot_bb['data'] = ((data['t']-data['t'].mean())/data['t'].std()).tolist() + ((data['W']-data['W'].mean())/data['W'].std()).tolist()
     # plot_bb['variable'] = ['time']*data['t'].shape[0] + ['brightness']*data['W'].shape[0]
 
-    # plot_bb['data'] = ((data['t']-data['t'].min())/(data['t'].max()-data['t'].min())).tolist() + ((data['W']-data['W'].min())/(data['W'].max()-data['W'].min())).tolist()
-    # plot_bb['variable'] = ['time']*data['t'].shape[0] + ['brightness']*data['W'].shape[0]
-
     sns.boxplot(data=plot_bb, x='variable', y='data', ax=ax2)
+    #sns.stripplot(data=plot_bb, x='variable', y='data', ax=ax2, color='r', alpha=0.7)
+    #sns.violinplot(data=plot_bb, x='variable', y='data', ax=ax2)
+    sns.swarmplot(data=plot_bb, x='variable', y='data', ax=ax2, color='r', alpha=0.7)
     ax2.grid()
     plt.show()
+
+    std_t = (data['t'] / data['t'].median()).std()
+    std_W = (data['W'] / data['W'].median()).std()
+
+    x_W = Analysis(df=data['W'], show=True, bounds='lrb', bounds_type='2s', cl=0.95, x_label='Brightness', unit='a.u.')
+    x_t = Analysis(df=data['t'], show=True, bounds='lrb', bounds_type='2s', cl=0.95, unit='min')
+
+    Brightness = Analysis(df=data['W']/data['W'].median(), show=True, bounds='lrb', bounds_type='2s', cl=0.95, x_label='Brightness of Failure', unit='a.u.')
+    Brightness.mle()
+    Time = Analysis(df=data['t']/data['t'].median(), show=True, bounds='lrb', bounds_type='2s', cl=0.95, x_label='Time of Failure',  unit='a.u.')
+    Time.mle()
+    objects = {fr'Brightness: $\widehat\beta$={Brightness.beta:4f} | $\widehat\eta$={Brightness.eta:4f}': Brightness,
+               fr'Time: $\widehat\beta$={Time.beta:4f} | $\widehat\eta$={Time.eta:4f}': Time}
+    PlotAll(objects).mult_weibull(x_label='Moment of Failure')
+
+    #bounds ='mcpb'
+
 
 
 

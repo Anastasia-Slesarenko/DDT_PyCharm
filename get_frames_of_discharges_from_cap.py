@@ -5,6 +5,7 @@ from os import path, remove, makedirs
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import sys
 import imutils
+from tqdm import tqdm
 
 
 def rotate(path_file_coord):
@@ -152,11 +153,23 @@ def video_to_frames(video_path, frames_dir, file_coord, overwrite=False, every=1
 
 if __name__ == '__main__':
     # test it
-    discharges = video_to_frames(video_path=r'silicone SPBU/PKD_02.02.22_part/1/cap_cut_crop.mp4',
-                                 frames_dir=r'silicone SPBU/PKD_02.02.22_part/1/test_frames',
-                                 file_coord=r'silicone SPBU/PKD_02.02.22_part/1/coord_p.txt',
-                                 overwrite=True, every=1, chunk_size=1000)
-    drops = video_to_frames(video_path=r'silicone SPBU/PKD_02.02.22_part/1/cap_cut_crop_drops.mp4',
-                            frames_dir=r'silicone SPBU/PKD_02.02.22_part/1/test_frames_drops',
-                            file_coord=r'silicone SPBU/PKD_02.02.22_part/1/coord_d.txt',
-                            overwrite=True, every=1, chunk_size=1000)
+    dat_fil_al = ['PKD_09.02.22_part', 'PKD_10.02.22_part', 'PKD_11.02.22_part', 'PKD_18.02.22_part']
+    a = [1, 2, 3, 4, 5, 6]
+    for dat_fil in tqdm(dat_fil_al):
+        for n in a:
+            discharges = video_to_frames(
+                video_path=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/cap_cut_{n}.mp4',
+                frames_dir=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/test_frames_{n}',
+                file_coord=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/coord_p.txt',
+                overwrite=True, every=1, chunk_size=10)
+
+
+
+    # discharges = video_to_frames(video_path=r'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/CD/cap_cut_1.mp4',
+    #                              frames_dir=r'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/CD/test_frames_1',
+    #                              file_coord=r'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/CD/coord_p.txt',
+    #                              overwrite=True, every=1, chunk_size=10)
+    # drops = video_to_frames(video_path=r'silicone SPBU/PKD_02.02.22_part/1/cap_cut_crop_drops.mp4',
+    #                         frames_dir=r'silicone SPBU/PKD_02.02.22_part/1/test_frames_drops',
+    #                         file_coord=r'silicone SPBU/PKD_02.02.22_part/1/coord_d.txt',
+    #                         overwrite=True, every=1, chunk_size=1000)
