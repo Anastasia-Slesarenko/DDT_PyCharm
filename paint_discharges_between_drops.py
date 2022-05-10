@@ -28,8 +28,9 @@ def au_frame(number):
     path_frames = 'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/2/' \
                   'test_frames_drops/cap_cut_crop_drops.mp4/'
     frame_with_name = Image.open(f'{path_frames}{frame_name}')
+    frame_with_name = frame_with_name.filter(ImageFilter.DETAIL)
     # enhancer = ImageEnhance.Brightness(frame_with_name)
-    # frame_with_name = enhancer.enhance(0.5)
+    # frame_with_name = enhancer.enhance(1.2)
 
     return frame_with_name
 
@@ -39,7 +40,7 @@ def au_frame(number):
 
 app = Dash(__name__)
 
-t_range = sum_df['t_sum'].unique()
+t_range = np.sort(sum_df['t_sum'].unique())
 
 app.layout = html.Div([
     html.H1('Разряды между каплями'),
@@ -59,7 +60,7 @@ app.layout = html.Div([
             max=int(sum_df['t_sum'].max()),
             step=None,
             marks={int(t): {'label': ''} for i, t in enumerate(t_range)},
-            value=int(t_range.max()),
+            value=int(40667),
             id='frame--slider',
             updatemode='mouseup',
         )], style={'width': '70%', 'display': 'inline-block', 'padding': '40px 20px 20px 20px'}),
@@ -111,7 +112,7 @@ def contr_plot(t_frame_slider, up, down):
 
     layout = go.Layout(autosize=False,
                        margin=dict(l=20, r=20, t=20, b=20),
-                       width=w, height=h,
+                       width=2*w/4, height=h,
                        dragmode='drawrect')
     fig = go.Figure(layout=layout)
 
@@ -134,11 +135,11 @@ def contr_plot(t_frame_slider, up, down):
         go.Scatter(x=plot_df['x_sum'],
                    y=-plot_df['y_sum'],
                    mode='markers',
-                   marker=dict(color='red')
+                   marker=dict(color='red', size=1)
                    )
     )
 
-    fig.update_xaxes(showgrid=False, range=(0, w), )
+    fig.update_xaxes(showgrid=False, range=(w/4, 3*w/4), )
     # fig.update_yaxes(autorange="reversed", showgrid=True, range=(0, img_height))
     fig['layout']['yaxis'].update(autorange=False, showgrid=True, range=[-h, 0])
     return [fig,

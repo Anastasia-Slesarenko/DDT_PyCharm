@@ -94,7 +94,7 @@ def extract_frames(video_path, frames_dir, file_coord, overwrite=False, start=-1
             while_safety = 0  # reset the safety count
 
             #save_path = frames_dir + "/{:010d}.jpg".format(frame)
-            save_path = path.join(frames_dir, video_filename, "{:010d}.jpg".format(frame))  # create the save path
+            save_path = path.join(frames_dir, video_filename, "{:010d}.jpg".format(frame+277923))  # create the save path
             if not path.exists(save_path) or overwrite:  # if it doesn't exist or we want to overwrite anyways
                 image = imutils.rotate(image, angle=theta)
                 cv2.imwrite(save_path, image)  # save the extracted image
@@ -153,23 +153,23 @@ def video_to_frames(video_path, frames_dir, file_coord, overwrite=False, every=1
 
 if __name__ == '__main__':
     # test it
-    dat_fil_al = ['PKD_09.02.22_part', 'PKD_10.02.22_part', 'PKD_11.02.22_part', 'PKD_18.02.22_part']
-    a = [1, 2, 3, 4, 5, 6]
-    for dat_fil in tqdm(dat_fil_al):
-        for n in a:
-            discharges = video_to_frames(
-                video_path=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/cap_cut_{n}.mp4',
-                frames_dir=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/test_frames_{n}',
-                file_coord=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/coord_p.txt',
-                overwrite=True, every=1, chunk_size=10)
+    # dat_fil_al = ['PKD_02.02.22_part', 'PKD_09.02.22_part', 'PKD_10.02.22_part', 'PKD_11.02.22_part', 'PKD_18.02.22_part']
+    # a = [1, 2, 3, 4, 5, 6]
+    # for dat_fil in tqdm(dat_fil_al):
+    #     for n in a:
+    #         discharges = video_to_frames(
+    #             video_path=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/cap_cut_{n}.mp4',
+    #             frames_dir=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/test_frames_{n}',
+    #             file_coord=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{dat_fil}/CD/coord_p.txt',
+    #             overwrite=True, every=1, chunk_size=10)
 
 
 
-    # discharges = video_to_frames(video_path=r'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/CD/cap_cut_1.mp4',
-    #                              frames_dir=r'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/CD/test_frames_1',
-    #                              file_coord=r'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/CD/coord_p.txt',
-    #                              overwrite=True, every=1, chunk_size=10)
-    # drops = video_to_frames(video_path=r'silicone SPBU/PKD_02.02.22_part/1/cap_cut_crop_drops.mp4',
-    #                         frames_dir=r'silicone SPBU/PKD_02.02.22_part/1/test_frames_drops',
-    #                         file_coord=r'silicone SPBU/PKD_02.02.22_part/1/coord_d.txt',
-    #                         overwrite=True, every=1, chunk_size=1000)
+    discharges = video_to_frames(video_path=r'C:/Users/1/Desktop/VKR/Master/data/new silicone/cap_cut_2.mp4',
+                                 frames_dir=r'C:/Users/1/Desktop/VKR/Master/data/new silicone/test_frames_1',
+                                 file_coord=r'C:/Users/1/Desktop/VKR/Master/data/new silicone/coord_p.txt',
+                                 overwrite=True, every=1, chunk_size=1000)
+    drops = video_to_frames(video_path=r'C:/Users/1/Desktop/VKR/Master/data/new silicone/cap_cut_crop_drops_2.mp4',
+                            frames_dir=r'C:/Users/1/Desktop/VKR/Master/data/new silicone/test_frames_drops',
+                            file_coord=r'C:/Users/1/Desktop/VKR/Master/data/new silicone/coord_d.txt',
+                            overwrite=True, every=1, chunk_size=1000)

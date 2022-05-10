@@ -36,11 +36,10 @@ def get_cut_and_crop_cap(path_cap, path_file_coord, time_start, time_end, name_v
 
 
 if __name__ == '__main__':
-    path_new = '/silicone SPBU/PKD_18.02.22_part/10/'
+    path_new = 'C:/Users/1/Desktop/VKR/Master/data/new silicone/'
 
-    get_cut_and_crop_cap(path_cap=f'{path_new}2022-02-18 15-58-02.mp4',
-                         path_file_coord=f"{path_new}coord_d.txt", time_start=0, time_end=VideoFileClip(f'{path_new}2022-02-18 15-58-02.mp4').duration,
-                         name_video='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm'
-                                    '/silicone SPBU/PKD_18.02.22_part/10/cap_cut_crop_drops.mp4')
+    get_cut_and_crop_cap(path_cap=f'{path_new}2022-05-05 14-01-50.mp4',
+                         path_file_coord=f"{path_new}coord_d.txt", time_start=0, time_end=VideoFileClip(f'{path_new}2022-05-05 14-01-50.mp4').duration,
+                         name_video='C:/Users/1/Desktop/VKR/Master/data/new silicone/cap_cut_crop_drops_2.mp4')
 
 

@@ -14,7 +14,7 @@ def integ(I, t):
 
 if __name__ == '__main__':
 
-    n_sample = 1
+    n_sample = 2
     d_f = 'PKD_02.02.22_part'
 
     reg_data = pd.read_csv(f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{d_f}/{n_sample}/test_frames'

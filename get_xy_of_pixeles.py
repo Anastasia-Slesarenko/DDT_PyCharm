@@ -6,30 +6,29 @@ from tqdm import tqdm
 import multiprocessing as mp
 from functools import partial
 
+hold = 20
 
-def count_bright_pixels(frame, crit_pix=20):
-
+def count_bright_pixels(frame, crit_pix=hold):
+    # crit_pix - порог по яркости пикселей
     # shape[0] - количество сторк
     # shape[1] - количество столбцов
-    count = 0
-    for i in range(frame.shape[0]):
-        for j in range(frame.shape[1]):
-            if frame[i][j] > crit_pix:
-                count += 1
+    count = np.sum(frame >= crit_pix)
     return count
 
 
-def find_false_pixels(frames_0='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm/'
-                               'silicone SPBU/PKD_18.02.22_part/10/test_frames/cap_cut_crop.mp4/0000000000.jpg'):
+def find_false_pixels(frames_0):
     frame_with_name = Image.open(f'{frames_0}')
     width, height = frame_with_name.size
+    # loc_x_start = width / 4
+    # loc_x_end = 3 * width / 4
     loc_x_start = width / 4
-    loc_x_end = 3 * width / 4
+    loc_x_end = width / 2
     frame_gray = ImageOps.grayscale(frame_with_name)
     # Убираем шум через медианный фильтр
-    frame_gray_from_filter = frame_gray.filter(ImageFilter.MedianFilter(3))
-    frame_gray_np = np.array(frame_gray_from_filter)
-    false_idx = np.stack(np.where(frame_gray_np >= 10), axis=1)
+    #frame_gray_from_filter = frame_gray.filter(ImageFilter.MedianFilter(3))
+    #frame_gray_np = np.array(frame_gray_from_filter)
+    frame_gray_np = np.array(frame_gray)
+    false_idx = np.stack(np.where(frame_gray_np >= hold), axis=1)
 
     return false_idx, loc_x_start, loc_x_end
 
@@ -44,27 +43,28 @@ def row_diff(loc_idx_old, false_idx, loc_x_start, loc_x_end):
     loc_idx = np.delete(loc_idx_old, delete_a_rows, axis=0)
     to_del = []
     for k in range(loc_idx.shape[0]):
-        if (loc_idx[k][1] < int(loc_x_start)) | (loc_idx[k][1] > int(loc_x_end)):
+        # if (loc_idx[k][1] < int(loc_x_start)) | (loc_idx[k][1] > int(loc_x_end)):
+        if loc_idx[k][1] > int(loc_x_end):
             to_del += [k]
     loc_idx = np.delete(loc_idx, to_del, axis=0)
 
     return loc_idx
 
 
-def async_load_find(frame, path_frames, false_idx, loc_x_start, loc_x_end, num_brightpixels=10):
+def async_load_find(frame, path_frames, false_idx, loc_x_start, loc_x_end, num_brightpixels=15):
     frame_with_name = Image.open(f'{path_frames}{frame}')
     frame_gray = ImageOps.grayscale(frame_with_name)
     # Убираем шум через медианный фильтр
     frame_gray_from_filter = frame_gray.filter(ImageFilter.MedianFilter(3))
     frame_gray_np = np.array(frame_gray_from_filter)
 
-    if count_bright_pixels(frame_gray_np, crit_pix=20) > num_brightpixels:
+    if count_bright_pixels(frame_gray_np, crit_pix=hold) > num_brightpixels:
         alpha = []
-        loc_idx = np.stack(np.where(frame_gray_np > 20), axis=1)
+        loc_idx = np.stack(np.where(frame_gray_np > hold), axis=1)
 
         # Убираем битые пиксели на изображении и ограничиваем по оси х
         loc_idx = row_diff(loc_idx, false_idx, loc_x_start, loc_x_end)
-        if loc_idx.shape[0] != 0:
+        if loc_idx.shape[0] > 5:
 
             # Записываем яркость искр
             for i in range(loc_idx.shape[0]):
@@ -80,7 +80,7 @@ def async_load_find(frame, path_frames, false_idx, loc_x_start, loc_x_end, num_b
     return 1
 
 
-def get_frames_with_discharges(path_frames, path_frames_0, num_brightpixels=10):
+def get_frames_with_discharges(path_frames, path_frames_0, num_brightpixels=15):
     os.chdir(path_frames)
     result = glob.glob('*.jpg')
 
@@ -109,10 +109,12 @@ def get_frames_with_discharges(path_frames, path_frames_0, num_brightpixels=10):
 
 
 if __name__ == '__main__':
-    get_frames_with_discharges(
-        path_frames='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm'
-                    '/silicone SPBU/PKD_18.02.22_part/10/test_frames/cap_cut_crop.mp4/',
-        path_frames_0='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm'
-                      '/silicone SPBU/PKD_18.02.22_part/10/test_frames/cap_cut_crop.mp4/0000000000.jpg',
-        num_brightpixels=10
-    )
+    f = ['PKD_02.02.22_part/1/', 'PKD_02.02.22_part/2/', 'PKD_09.02.22_part/4/', 'PKD_10.02.22_part/5/',
+         'PKD_11.02.22_part/8/', 'PKD_18.02.22_part/10/']
+
+    for n in f:
+        get_frames_with_discharges(
+            path_frames=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{n}test_frames/cap_cut_crop.mp4/',
+            path_frames_0=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{n}test_frames/cap_cut_crop.mp4/0000000000.jpg',
+            num_brightpixels=10
+        )

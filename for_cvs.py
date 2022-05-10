@@ -56,7 +56,7 @@ def sum_df_to_cvs(path_file_coord, name_cvs, name_cvs_reg, name_cvs_reg2):
         t_reg = pd.DataFrame()
         t_reg['t_sum'] = np.arange(min(t_sum), max(t_sum), step_t)
         reg_data = t_reg.merge(not_reg, on='t_sum', how='left')
-        threshold = 10 # уровень фона
+        threshold = 20 # уровень фона
         reg_data['alpha_all'] = reg_data['alpha_all'].fillna(threshold)
         reg_data.to_csv(name_cvs_reg)
 
@@ -84,12 +84,17 @@ def sum_df_to_cvs(path_file_coord, name_cvs, name_cvs_reg, name_cvs_reg2):
 
 
 if __name__ == '__main__':
-    sum_df_to_cvs(path_file_coord='C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_14.12.21_part/9/test_frames/cap_cut_crop.mp4/',
-                  name_cvs='sum_df.cvs', name_cvs_reg='reg_data.cvs', name_cvs_reg2='not_reg_data.cvs')
+    f = ['PKD_02.02.22_part/1/', 'PKD_02.02.22_part/2/', 'PKD_09.02.22_part/4/', 'PKD_10.02.22_part/5/',
+         'PKD_11.02.22_part/8/', 'PKD_18.02.22_part/10/']
 
-    # sum_df_to_cvs(path_file_coord='C:/Users/1/Desktop/ВКР/Магистерская/data/silicone SPBU/PKD_18.02.22_part/10'
+    for n in f:
+        sum_df_to_cvs(
+            path_file_coord=f'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/{n}test_frames/cap_cut_crop.mp4/',
+            name_cvs='sum_df_new.cvs', name_cvs_reg='reg_data_new.cvs', name_cvs_reg2='not_reg_data_new.cvs')
+
+    # sum_df_to_cvs(path_file_coord='C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_18.02.22_part/10'
     #                               '/test_frames_drops/cap_cut_crop_drops.mp4/',
-    #               name_cvs='sum_df_fix.cvs', name_cvs_reg='None')
+    #               name_cvs='sum_df_fix_new.cvs', name_cvs_reg='None', name_cvs_reg2='None')
     # name_cvs = 'sum_df_fix.cvs', name_cvs_reg = 'None' для координат на кадрах с каплями из test_frames_drops
 #
 # if __name__ == '__main__':

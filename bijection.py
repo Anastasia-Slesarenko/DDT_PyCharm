@@ -43,12 +43,16 @@ def new_coord_pix(path_file_pix, new_path_file_pix,  path_image0_p, path_image0_
 
 
 if __name__ == '__main__':
+    f = 'PKD_02.02.22_part/1'
     try:
-        new_coord_pix(path_file_pix='silicone SPBU/PKD_18.02.22_part/10/test_frames/cap_cut_crop.mp4/',
-                      new_path_file_pix='C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm'
-                                        '/DDT_PyCharm/silicone SPBU/PKD_18.02.22_part/10/test_frames_drops/cap_cut_crop_drops.mp4/',
-                      path_image0_p='silicone SPBU/PKD_18.02.22_part/10/test_frames/cap_cut_crop.mp4/0000000000.jpg',
-                      path_image0_d='silicone SPBU/PKD_18.02.22_part/10/test_frames_drops/cap_cut_crop_drops.mp4/0000000000.jpg')
+        new_coord_pix(path_file_pix=f'C:/Users/1/Desktop/VKR/Master/'
+                                        f'data/silicone SPBU/{f}/test_frames/cap_cut_crop.mp4/',
+                      new_path_file_pix='C:/Users/1/Desktop/VKR/Master/'
+                                        f'data/silicone SPBU/{f}/test_frames_drops/cap_cut_crop_drops.mp4/',
+                      path_image0_p='C:/Users/1/Desktop/VKR/Master/'
+                                        f'data/silicone SPBU/{f}/test_frames/cap_cut_crop.mp4/0000000000.jpg',
+                      path_image0_d='C:/Users/1/Desktop/VKR/Master/'
+                                        f'data/silicone SPBU/{f}/test_frames_drops/cap_cut_crop_drops.mp4/0000000000.jpg')
     except Exception as e:
         print(e)
 # def rotate(path_file_coord):

@@ -11,3 +11,5 @@ scipy~=1.7.3
 plotly~=5.3.1
 dash~=2.0.0
 moviepy~=1.0.3
+celluloid~=0.2.0
+ipython~=8.2.0

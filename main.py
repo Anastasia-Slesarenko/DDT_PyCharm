@@ -8,6 +8,7 @@ import imutils
 import matplotlib.pyplot as plt
 
 
+
 def count_bright_pixels(frame, crit_pix=20):
 
     # shape[0] - количество сторк
@@ -20,7 +21,8 @@ def count_bright_pixels(frame, crit_pix=20):
     return count
 
 if __name__ == '__main__':
-    path_frames = 'C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm/2021-11-22 16-13-02/test_frames_drops/cap_cut_crop_drops.mp4'
+    hold = 5
+    path_frames = 'C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/1/test_frames/cap_cut_crop.mp4/'
     os.chdir(path_frames)
     result = glob.glob('*.jpg')
     index = []
@@ -29,7 +31,7 @@ if __name__ == '__main__':
     alpha =[]
     number_frames = []
     # Установить номер интересующего фрейма для отрисовки найденных пикселей в листе new
-    new = [sorted(result)[0], sorted(result)[7655]]
+    new = [sorted(result)[0], sorted(result)[707]]
     for name_frame in tqdm(new): #tqdm(list(sorted(result))[0]):
         frame_with_name = Image.open(f'{path_frames}{name_frame}')
         frame_gray = ImageOps.grayscale(frame_with_name)
@@ -40,10 +42,10 @@ if __name__ == '__main__':
         loc_x_end = 3*width/4
         alpha = []
         if int(name_frame[:-4]) == 0:
-            false_idx = np.stack(np.where(frame_gray_np >= 10), axis=1)
+            false_idx = np.stack(np.where(frame_gray_np >= hold), axis=1)
 
-        if count_bright_pixels(frame_gray_np, crit_pix=20) > 10:
-            loc_idx_old = np.stack(np.where(frame_gray_np > 20), axis=1)
+        if count_bright_pixels(frame_gray_np, crit_pix=20) > hold:
+            loc_idx_old = np.stack(np.where(frame_gray_np > hold), axis=1)
 
             nrows, ncols = loc_idx_old.shape
             dtype = {'names': ['f{}'.format(i) for i in range(ncols)],
@@ -67,13 +69,14 @@ if __name__ == '__main__':
 
     _, ax = plt.subplots()
     # Указать путь у интересующему фрейму
-    frame_with_name = Image.open('C:/Users/1/Desktop/ВКР/Магистерская/ProjectPyCharm/DDT_PyCharm'
-                                 '/test_frames/cap_cut_crop.mp4/0000007655.jpg')
+    frame_with_name = Image.open('C:/Users/1/Desktop/VKR/Master/data/silicone SPBU/PKD_02.02.22_part/1/'
+                                 'test_frames/cap_cut_crop.mp4/0000000707.jpg')
     frame_gray = ImageOps.grayscale(frame_with_name)
     frame_gray_np = np.array(frame_gray)
     imgplot = ax.imshow(frame_gray_np, cmap=plt.get_cmap('gray'))
     ax.scatter(all_[:, 1], all_[:, 0], fc='r', marker='.', s=1)
     plt.show()
+    print(len(all_[:, 1]))
 
 
 

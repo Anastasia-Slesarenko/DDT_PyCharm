@@ -114,7 +114,7 @@ def contr_plot(t_frame_slider, up, down):
 
         layout = go.Layout(autosize=False,
                            margin=dict(l=20, r=20, t=20, b=20),
-                           width=w, height=h,
+                           width=2*w/4, height=h,
                            dragmode='drawrect')
         fig = go.Figure(layout=layout)
 
@@ -141,7 +141,7 @@ def contr_plot(t_frame_slider, up, down):
                        )
         )
 
-        fig.update_xaxes(showgrid=False, range=(0, w), )
+        fig.update_xaxes(showgrid=False, range=(w/4, 3*w/4), )
         # fig.update_yaxes(autorange="reversed", showgrid=True, range=(0, img_height))
         fig['layout']['yaxis'].update(autorange=False, showgrid=True, range=[-h, 0])
         return [fig,
@@ -151,7 +151,7 @@ def contr_plot(t_frame_slider, up, down):
 
         layout = go.Layout(autosize=False,
                            margin=dict(l=20, r=20, t=20, b=20),
-                           width=w, height=h,
+                           width=2*w/4, height=h,
                            dragmode='drawrect')
         fig = go.Figure(layout=layout)
 
@@ -170,7 +170,7 @@ def contr_plot(t_frame_slider, up, down):
             )
         )
 
-        fig.update_xaxes(showgrid=False, range=(0, w), )
+        fig.update_xaxes(showgrid=False, range=(w/4, 3*w/4), )
         # fig.update_yaxes(autorange="reversed", showgrid=True, range=(0, img_height))
         fig['layout']['yaxis'].update(autorange=False, showgrid=True, range=[-h, 0])
         return [fig,
