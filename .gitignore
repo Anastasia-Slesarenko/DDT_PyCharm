@@ -153,3 +153,7 @@ fabric.properties
 
 # пока добавим сюда
 /2021-10-22 16-12-08.mp4
+*.jpg
+/test_frames
+/test_frames/
+/test_frames/
